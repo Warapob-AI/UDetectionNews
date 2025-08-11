@@ -17,7 +17,9 @@ def NewsCheck(task: str, search: str):
         os.getenv('GEMINI_API_KEY_4'),
         os.getenv('GEMINI_API_KEY_5'),
         os.getenv('GEMINI_API_KEY_6'),
-        os.getenv('GEMINI_API_KEY_7')
+        os.getenv('GEMINI_API_KEY_7'),
+        os.getenv('GEMINI_API_KEY_8'),
+        os.getenv('GEMINI_API_KEY_9'),
     ]
     valid_keys = [key for key in api_keys if key]
 

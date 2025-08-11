@@ -71,7 +71,9 @@ def NewsSearch(task: str):
         os.getenv('SERPER_API_KEY_4'),
         os.getenv('SERPER_API_KEY_5'),
         os.getenv('SERPER_API_KEY_6'),
-        os.getenv('SERPER_API_KEY_7')
+        os.getenv('SERPER_API_KEY_7'),
+        os.getenv('SERPER_API_KEY_8'),
+        os.getenv('SERPER_API_KEY_9'),
     ]
 
     url = "https://google.serper.dev/search"
