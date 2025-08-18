@@ -11,14 +11,14 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Validation from './pages/Validation.jsx';
-import DetectText from './pages/Check.jsx';
+import DetectText from './pages/check.jsx';
 import Home from './pages/Home.jsx';
 import Navbar from './components/app_navigation-menu.jsx';
 
 
 const theme = createTheme({
   typography: {
-    fontFamily: '"IBM Plex Sans Thai", sans-serif',
+    fontFamily: '"Noto Sans Thai Looped", sans-serif;',
   },
 });
 

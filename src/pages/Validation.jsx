@@ -71,7 +71,7 @@ function ResultPage() {
     const relatedWebsites = Array.isArray(location.state?.searchResult) ? location.state.searchResult : [];
 
     const confidencePercentage = cleanConfidence(result.confidence);
-    const predictionText = result.conclusion || "ไม่สามารถระบุได้";
+    let predictionText = result.conclusion || "ไม่สามารถระบุได้";
     const uniqueTexts = [...new Set(result.analysis_points.map(p => p.header).filter(Boolean))];
     const uniqueTextsDes = [...new Set(result.analysis_points.map(p => p.description).filter(Boolean))];
     const analysisDetails = uniqueTexts.map((header, index) => ({
@@ -80,13 +80,22 @@ function ResultPage() {
     }));
     let color_text = '';
     let color_stop_1 = '';
+    let color_stop_2 = '';
 
     if (predictionText.includes('ข่าวจริง') || predictionText.toLowerCase().includes('true')) {
         color_text = '#2ecc71';
-        color_stop_1 = '#00ff73ff';
-    } else if (predictionText.includes('ข่าวปลอม')) {
+        color_stop_1 = '#00ffb3ff';
+        color_stop_2 = '#00ff88ff';
+        predictionText = 'ข่าวจริง'
+    } else if (predictionText.includes('ข่าวปลอม') || predictionText.toLowerCase().includes('fake')) {
         color_text = '#e74c3c';
         color_stop_1 = '#ff0000ff';
+        color_stop_2 = '#ff0000ff';
+        predictionText = 'ข่าวปลอม'
+    } else if (predictionText.includes('ไม่เพียงพอ')) {
+        color_text = '#dce73cff';
+        color_stop_1 = '#ffee00ff';
+        color_stop_2 = '#ffee00ff';
     }
 
     return (
@@ -98,7 +107,7 @@ function ResultPage() {
             }}
         >
             {/* ส่วนหัวและผลลัพธ์ (คงเดิม) */}
-            <Typography variant="h4" color="white" fontWeight={500} gutterBottom>ผลการวิเคราะห์</Typography>
+            <Typography variant="h4" color="white" fontWeight={500} marginTop={10} gutterBottom>ผลการวิเคราะห์</Typography>
             <Paper elevation={6} sx={{ p: 3, borderRadius: '16px', backgroundColor: '#2c3e50', width: '100%', maxWidth: '800px', textAlign: 'center' }}>
                 <Typography variant="h6" sx={{ color: 'white', mb: 1 }}>หัวข้อข่าวที่นำมาวิเคราะห์</Typography>
                 <Typography sx={{ color: 'rgba(255,255,255,0.8)' }}>"{analyzedText}"</Typography>
@@ -119,7 +128,7 @@ function ResultPage() {
             >
                 {/* === คอลัมน์ซ้าย (วงกลม) === */}
                 <Box sx={{ flex: 'none', textAlign: 'center' }}>
-                    <CircularProgressWithLabel value={confidencePercentage} color_stop_1={color_stop_1} />
+                    <CircularProgressWithLabel value={confidencePercentage} color_stop_1={color_stop_1} color_stop_2={color_stop_2} />
                     {/* เปลี่ยนข้อความให้เหมาะสม เพราะไม่ต้องชี้แล้ว */}
                     <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '0.8rem', mt: 1 }}>
                         ผลการวิเคราะห์
@@ -257,7 +266,7 @@ function ResultPage() {
             </Paper>
             {/* === ส่วนเว็บไซต์ที่ใกล้เคียง (อัปเกรดเป็นการ์ดข่าว) === */}
             <Box sx={{ width: '100%', maxWidth: 'lg', mt: 3 }}>
-                <Typography variant="h5" color="white" gutterBottom sx={{ textAlign: 'center', mb: 3 }}>
+                <Typography variant="h5" color="white" gutterBottom sx={{ textAlign: 'center', mb: 5 }}>
                     แหล่งข้อมูลที่ใกล้เคียง
                 </Typography>
                 <Grid container maxWidth='lg' spacing={3}>
@@ -268,7 +277,7 @@ function ResultPage() {
                                 height: '100%',
                                 backgroundColor: '#fff',
                                 color: '#000',
-                                borderRadius: '16px',
+                                borderRadius: '1px',
                                 display: 'flex',
                                 flexDirection: 'column',
                                 boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
@@ -286,10 +295,10 @@ function ResultPage() {
                                     sx={{ objectFit: 'cover' }}
                                 />
                                 <CardContent sx={{ flexGrow: 1, p: 2 }}>
-                                    <Typography gutterBottom variant="h6" component="div" sx={{ fontWeight: 'bold', lineHeight: 1.3, height: '5.1em', overflow: 'hidden' }}>
+                                    <Typography gutterBottom variant="h6" component="div" sx={{ fontWeight: 'bold', lineHeight: 1.3, height: 'auto', overflow: 'hidden' }}>
                                         {site.title}
                                     </Typography>
-                                    <Typography variant="body2" color="text.secondary" sx={{ height: '3.6em', overflow: 'hidden' }}>
+                                    <Typography variant="body2" color="text.secondary" sx={{ height: 'auto', overflow: 'hidden' }}>
                                         {site.description}
                                     </Typography>
                                 </CardContent>
@@ -302,7 +311,7 @@ function ResultPage() {
                                         variant="contained"
                                         fullWidth
                                         sx={{
-                                            backgroundColor: '#27ae60',
+                                            backgroundColor: '#2761aeff',
                                             fontWeight: 'bold',
                                             '&:hover': {
                                                 backgroundColor: '#229954'
