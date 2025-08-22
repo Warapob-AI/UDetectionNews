@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from data.NewsWebsiteTitle import NewsWebsiteTitle 
 from data.NewsTitleSearch import NewsSearch 
 from data.NewsTitleCheck import NewsCheck 
+from database.getFileLink import fetch_link_news 
 
 app = FastAPI(title="Fastapi is Running ..")
 
@@ -61,4 +62,16 @@ class NewsTitleCheckRequest(BaseModel):
 async def news_title_check(request: NewsTitleCheckRequest):
     newsCheck = NewsCheck(task = request.task, search = request.search)
     return newsCheck
+
+# =======================================================
+# Get File Link
+# =======================================================
+class GetFileLink(BaseModel):
+    task: str
+    search: str
+
+@app.post("/production/get-file-link")
+async def news_title_check():
+    getLink = fetch_link_news()
+    return getLink
 

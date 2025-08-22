@@ -11,8 +11,9 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Validation from './pages/Validation.jsx';
-import DetectText from './pages/check.jsx';
+import DetectText from './pages/Check.jsx';
 import Home from './pages/Home.jsx';
+import Fakenews from './pages/Fakenews.jsx';
 import Navbar from './components/app_navigation-menu.jsx';
 
 
@@ -38,10 +39,12 @@ function App() {
               <>
                 <Home />
                 <DetectText />
+                <Fakenews />
               </>
             } />
             <Route path="/detectText" element={<DetectText />} /> {/* ✅ ตรงกับ navigate */}
             <Route path="/validation" element={<Validation />} /> {/* ✅ ตรงกับ navigate */}
+            
           </Routes>
         </Router>
 

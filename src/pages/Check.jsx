@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // ✅ 1. เพิ่ม Grid เข้าไปใน import
-import { Box, Typography, TextField, Button, CircularProgress, Grid, Container } from '@mui/material';
+import { Box, Typography, TextField, Button, CircularProgress, Grid, Container, LinearProgress  } from '@mui/material';
 import axios from 'axios';
 // เพิ่ม State สำหรับสลับโหมด
 
@@ -72,6 +72,7 @@ const DetectText = React.forwardRef((props, ref) => {
   const [newsText, setNewsText] = useState('');
   const [status, setStatus] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [progress, setProgress] = useState(0); // ✅ 2. เพิ่ม State สำหรับเก็บ %
   const navigate = useNavigate();
   const [inputType, setInputType] = useState('text');
 
@@ -81,37 +82,39 @@ const DetectText = React.forwardRef((props, ref) => {
       alert(alertMessage);
       return;
     }
+
     setIsLoading(true);
+    setProgress(0); // ✅ เริ่มต้นที่ 0%
 
     try {
       let textToAnalyze = newsText;
+      // กำหนดจำนวนขั้นตอนทั้งหมด เพื่อคำนวณ %
+      const totalSteps = inputType === 'link' ? 3 : 2;
+      let currentStep = 0;
 
-      // ขั้นตอนที่ 1: ถ้าเป็นลิงก์ ให้ดึงหัวข้อข่าวจากเว็บมาก่อน
       if (inputType === 'link') {
-        setStatus('กำลังตรวจจับหัวข้อเว็บไซต์...')
+        setStatus('กำลังตรวจจับหัวข้อเว็บไซต์...');
+        setProgress(10); // <-- อัปเดต ProgressZ
         const titleResponse = await axios.post('http://localhost:8000/production/news-website-title', { url: newsText });
-
         textToAnalyze = titleResponse.data;
-        console.log(textToAnalyze)
       }
 
-      setStatus('กำลังค้นหาข้อมูลที่เกี่ยวข้อง...')
+      setStatus('กำลังค้นหาข้อมูลที่เกี่ยวข้อง...');
+      setProgress(50); // <-- อัปเดต Progress
       const searchResponse = await axios.post('http://localhost:8000/production/news-title-search', { task: textToAnalyze });
 
-      setStatus('กำลังวิเคราะห์...')
+      setStatus('กำลังวิเคราะห์...');
+      setProgress(80); // <-- อัปเดต Progress
       const finalResponse = await axios.post('http://localhost:8000/production/news-title-check', {
         task: textToAnalyze,
         search: JSON.stringify(searchResponse.data)
       });
 
-      console.log(searchResponse.data)
-
-
-      // ขั้นตอนสุดท้าย: ส่งผลลัพธ์ไปหน้า validation
+      // ... ส่วน navigate เหมือนเดิม
       navigate('/validation', {
         state: {
           result: finalResponse.data,
-          textToAnalyze: textToAnalyze, // <-- เพิ่มบรรทัดนี้เข้ามา
+          textToAnalyze: textToAnalyze,
           searchResult: searchResponse.data
         }
       });
@@ -121,6 +124,7 @@ const DetectText = React.forwardRef((props, ref) => {
       alert("เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์");
     } finally {
       setIsLoading(false);
+      setProgress(0); // ✅ รีเซ็ตค่าเมื่อทำงานเสร็จ
     }
   };
 
@@ -237,15 +241,20 @@ const DetectText = React.forwardRef((props, ref) => {
         >
           {isLoading ? 'กำลังวิเคราะห์...' : 'วิเคราะห์ข่าว'}
         </Button>
-        <Box sx={{ pb: 5 }}></Box>
+        <Box sx={{  }}></Box>
         {isLoading && (
-          <Box sx={{ width: '100%', maxWidth: '700px', mt: 2, display: 'flex', justifyContent: 'center' }}>
-            <CircularProgress />
-            <Typography sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+        <Box sx={{ width: '100%', maxWidth: '700px', mt: 4, mx: 'auto' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
               {status}
             </Typography>
+            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
+              {`${Math.round(progress)}%`}
+            </Typography>
           </Box>
-        )}
+          <LinearProgress variant="determinate" value={progress} />
+        </Box>
+      )}
       </Box>
 
     </>

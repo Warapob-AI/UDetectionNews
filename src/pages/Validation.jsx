@@ -68,7 +68,10 @@ function ResultPage() {
     // --- จุดที่แก้ไข: ดึงข้อมูลที่ครบถ้วนมาใช้โดยตรง ---
     // ไม่ต้อง fetch เพิ่มแล้ว!
     // ตรวจสอบว่าเป็น Array จริงๆ ก่อนนำไปใช้
-    const relatedWebsites = Array.isArray(location.state?.searchResult) ? location.state.searchResult : [];
+    console.log("testtesttest"+ location.state.searchResult)
+    const relatedWebsites = Array.isArray(location.state.searchResult) 
+  ? location.state.searchResult 
+  : [];
 
     const confidencePercentage = cleanConfidence(result.confidence);
     let predictionText = result.conclusion || "ไม่สามารถระบุได้";

@@ -22,3 +22,7 @@ SERPER_API_KEY_6 = ''
 SERPER_API_KEY_7 = ''
 SERPER_API_KEY_8 = '' 
 SERPER_API_KEY_9 = ''
+
+DB_USERNAME = "your_username_here"
+DB_PASSWORD = "your_password_here"
+DB_PROJECT_NAME = "your_project_name_here" 

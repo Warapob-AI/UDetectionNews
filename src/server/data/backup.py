@@ -64,6 +64,7 @@ def NewsSearch(task: str):
             
             if "items" in search_results:
                 for item in search_results.get("items", []):
+                    print(item)
                     title = item.get("title")
                     link = item.get("link")
                     snippet = item.get("snippet")
@@ -102,7 +103,7 @@ def NewsSearch(task: str):
     return json.dumps([], indent=4, ensure_ascii=False) # return เป็น JSON array ว่าง
 
 # --- การเรียกใช้งาน ---
-task = "Ambatukam ช่วยตัวเองบนรถ"
+task = "สำนักงานคณะกรรมการกำกับหลักทรัพย์และตลาดหลักทรัพย์ เปิดเว็บไซต์ใหม่"
 
 search_results = NewsSearch(task)
 NewsCheck(task, search_results)
